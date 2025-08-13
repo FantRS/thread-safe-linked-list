@@ -4,20 +4,18 @@
 
 A doubly linked list is implemented using internal `Node` and the `LinkedList` struct itself. Thread-safe shared mutability is implemented using `Arc<Mutex<T>>`.
 
-`Node<T>` struct:
 ```rs
+type ThreadSafeNode<T> = Arc<Mutex<Node<T>>>;
+
 struct Node<T> {
     value: T,
-    next: Option<Arc<Mutex<Node<T>>>>,
-    prev: Option<Arc<Mutex<Node<T>>>>,
+    next: Option<ThreadSafeNode<T>>,
+    prev: Option<ThreadSafeNode<T>>,
 }
-```
 
-`LinkedList<T>` struct:
-```rs
 pub struct LinkedList<T> {
-    head: Option<Arc<Mutex<Node<T>>>>,
-    tail: Option<Arc<Mutex<Node<T>>>>,
+    head: Option<ThreadSafeNode<T>>,
+    tail: Option<ThreadSafeNode<T>>,
     len: u32,
 }
 ```
