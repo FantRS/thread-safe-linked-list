@@ -4,11 +4,12 @@ use std::{
 };
 
 type Error = LinkedListError;
+type ThreadSafeNode<T> = Arc<Mutex<Node<T>>>;
 
 struct Node<T> {
     value: T,
-    next: Option<Arc<Mutex<Node<T>>>>,
-    prev: Option<Arc<Mutex<Node<T>>>>,
+    next: Option<ThreadSafeNode<T>>,
+    prev: Option<ThreadSafeNode<T>>,
 }
 
 impl<T> Node<T> {
@@ -20,14 +21,14 @@ impl<T> Node<T> {
         }
     }
 
-    fn safe_new(value: T) -> Arc<Mutex<Node<T>>> {
+    fn safe_new(value: T) -> ThreadSafeNode<T> {
         Arc::new(Mutex::new(Node::new(value)))
     }
 }
 
 pub struct LinkedList<T> {
-    head: Option<Arc<Mutex<Node<T>>>>,
-    tail: Option<Arc<Mutex<Node<T>>>>,
+    head: Option<ThreadSafeNode<T>>,
+    tail: Option<ThreadSafeNode<T>>,
     len: u32,
 }
 
