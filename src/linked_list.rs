@@ -92,7 +92,6 @@ impl<T> LinkedList<T> {
         }
 
         if let Some(old_tail) = self.tail.take() {
-            println!("2 start");
             if let Some(prev_of_tail) = old_tail.lock().ok()?.prev.take() {
                 prev_of_tail.lock().ok()?.next = None;
 
